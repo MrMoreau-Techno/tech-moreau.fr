@@ -66,9 +66,7 @@ ul.tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem
 .search-bar input{border:0;background:none;font:inherit;color:var(--ink);width:100%;outline:none}
 .search-bar svg{width:18px;height:18px;stroke:var(--muted);flex-shrink:0;fill:none}
 /* SHOP / COURS */
-.level-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem}
-.level-tabs button{font:600 .9rem "Instrument Sans",sans-serif;padding:.4rem 1rem;border:1.5px solid var(--line);background:var(--soft);color:var(--muted);border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
-.level-tabs button.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
 .shop{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
 .prod{background:var(--soft);border-radius:24px;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease}
 .prod:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
@@ -180,18 +178,11 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-off
       <svg viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="search" id="search-cours" placeholder="Rechercher un cours…" aria-label="Rechercher un cours">
     </div>
-    <div class="level-tabs" role="group" aria-label="Filtrer par niveau">
-      <button class="active" data-level="all">Tous</button>
-      <button data-level="6e">6e</button>
-      <button data-level="5e">5e</button>
-      <button data-level="4e">4e</button>
-      <button data-level="3e">3e</button>
-    </div>
     <div class="shop" id="cours-grid">
-      <article class="prod" data-level="4e" data-title="objet technique & système technique ordinateur">
+      <article class="prod" data-title="objet technique système technique ordinateur">
         <div class="img" id="open-cover"><img id="cover" alt="Infographie : comment fonctionne un ordinateur"></div>
         <div class="info">
-          <span class="badge">4e</span>
+          <span class="badge">Chapitre 1</span>
           <h3>Objet technique &amp; système technique : l'ordinateur !</h3>
           <p>Comprendre la différence entre un objet technique et un système technique, en prenant l'ordinateur comme exemple.</p>
           <div class="prod-links">
@@ -200,9 +191,8 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-off
           </div>
         </div>
       </article>
-      <article class="prod empty" data-level="5e" data-title=""><p>Cours 5e à venir…</p></article>
-      <article class="prod empty" data-level="4e" data-title=""><p>Cours 4e à venir…</p></article>
-      <article class="prod empty" data-level="3e" data-title=""><p>Cours 3e à venir…</p></article>
+      <article class="prod empty" data-title=""><p>Chapitre 2 à venir…</p></article>
+      <article class="prod empty" data-title=""><p>Chapitre 3 à venir…</p></article>
     </div>
     <p class="no-result" id="no-result-cours">Aucun cours ne correspond à ta recherche.</p>
   </div>
@@ -294,28 +284,18 @@ document.getElementById('search-portfolio').addEventListener('input',function(){
   document.getElementById('no-result-portfolio').style.display=found?'none':'block';
 });
 
-/* ── Filtres par niveau ── */
-var currentLevel='all';
+/* ── Recherche cours ── */
 function filterCours(){
   var q=document.getElementById('search-cours').value.toLowerCase().trim();
   var prods=document.querySelectorAll('#cours-grid .prod');
   var found=0;
   prods.forEach(function(p){
-    var levelOk=currentLevel==='all'||p.dataset.level===currentLevel;
-    var textOk=!q||(p.dataset.title||p.textContent).toLowerCase().includes(q);
-    p.style.display=(levelOk&&textOk)?'':'none';
-    if(levelOk&&textOk)found++;
+    var match=!q||(p.dataset.title||p.textContent).toLowerCase().includes(q);
+    p.style.display=match?'':'none';
+    if(match)found++;
   });
   document.getElementById('no-result-cours').style.display=found?'none':'block';
 }
-document.querySelectorAll('.level-tabs button').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('.level-tabs button').forEach(function(b){b.classList.remove('active')});
-    btn.classList.add('active');
-    currentLevel=btn.dataset.level;
-    filterCours();
-  });
-});
 document.getElementById('search-cours').addEventListener('input',filterCours);
 
 /* Init */
